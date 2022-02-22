@@ -8,10 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Bounding box object for creating regions
@@ -78,8 +76,15 @@ public class Bound {
 	 * Kill/Remove all entities in this bound
 	 */
 	public void removeEntities() {
-		entities.forEach(Entity::remove);
-		entities.clear();
+		try {
+			entities.forEach(Entity::remove);
+			entities.clear();
+		}
+		catch (ConcurrentModificationException e){
+			Logger logger = Bukkit.getLogger();
+			logger.warning("WARNING: RemoveEntites has triggered a ConcurrentModificationException!");
+			logger.warning(e.getMessage());
+		}
 	}
 
 	/** Add an entity to the entity list
